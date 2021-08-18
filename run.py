@@ -9,6 +9,7 @@ strategy = tf.distribute.TPUStrategy(cluster_resolver)
 (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
+print("Starting model building")
 with strategy.scope():
   model = models.Sequential()
   model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
@@ -23,9 +24,10 @@ with strategy.scope():
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
   
- 
-model.fit(train_images, train_labels, epochs=10, 
+print("Starting model training") 
+history = model.fit(train_images, train_labels, epochs=10, 
                     validation_data=(test_images, test_labels))
+print(history)
 
   
   
